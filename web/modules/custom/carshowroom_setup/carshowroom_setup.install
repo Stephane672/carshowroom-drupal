@@ -423,6 +423,21 @@ function carshowroom_setup_update_10006() {
 }
 
 /**
+ * Create the 36 structured Car nodes and backfill their images, condition
+ * and carousel defaults on a site where the module was freshly installed
+ * (schema already at the latest version, so 10003/10005/10006/10007 never
+ * ran automatically).
+ */
+function carshowroom_setup_update_10008() {
+  $messages = [];
+  $messages[] = carshowroom_setup_update_10003();
+  $messages[] = carshowroom_setup_update_10005();
+  $messages[] = carshowroom_setup_update_10006();
+  $messages[] = carshowroom_setup_update_10007();
+  return implode(' ', $messages);
+}
+
+/**
  * Backfill field_show_in_carousel on existing Car nodes.
  */
 function carshowroom_setup_update_10007() {
