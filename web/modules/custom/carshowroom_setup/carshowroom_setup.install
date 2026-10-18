@@ -524,3 +524,50 @@ function carshowroom_setup_update_10007() {
 
   return "$updated Car node(s) set to show in their carousel by default.";
 }
+
+/**
+ * Rename "Blaze Hot Hatch" to "Toyota Yaris GR" and point it at its new,
+ * git-tracked photo under public://car_images/.
+ */
+function carshowroom_setup_update_10010() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'car')
+    ->condition('title', 'Blaze Hot Hatch')
+    ->execute();
+
+  if (!$ids) {
+    return 'No "Blaze Hot Hatch" node found; nothing to rename.';
+  }
+
+  $new_title = 'Toyota Yaris GR';
+  $uri = 'public://car_images/toyota-yaris-gr.jpg';
+  $real_path = \Drupal::service('file_system')->realpath($uri);
+  if (!$real_path || !file_exists($real_path)) {
+    return "$uri not found on disk; node not updated.";
+  }
+
+  $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+    ->loadByProperties(['uri' => $uri]);
+  if ($existing_files) {
+    $file = reset($existing_files);
+  }
+  else {
+    $file = File::create(['uri' => $uri, 'uid' => 1, 'status' => 1]);
+    $file->save();
+  }
+
+  $updated = 0;
+  foreach ($storage->loadMultiple($ids) as $node) {
+    $node->setTitle($new_title);
+    $node->set('field_image', [
+      'target_id' => $file->id(),
+      'alt' => $new_title . ' - Car Showroom Mauritius',
+    ]);
+    $node->save();
+    $updated++;
+  }
+
+  return "$updated node(s) renamed to \"$new_title\" with updated photo.";
+}
