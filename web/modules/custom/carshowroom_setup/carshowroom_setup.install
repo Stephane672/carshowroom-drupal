@@ -7,6 +7,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
+use Drupal\taxonomy\Entity\Term;
 
 function _carshowroom_setup_cars(): array {
   return [
@@ -435,6 +436,68 @@ function carshowroom_setup_update_10008() {
   $messages[] = carshowroom_setup_update_10006();
   $messages[] = carshowroom_setup_update_10007();
   return implode(' ', $messages);
+}
+
+/**
+ * Create the car_category taxonomy terms (SUV, Sport Cars, Sedan) if they
+ * don't exist, and link every Car node's field_category_term to the term
+ * matching its plain-text field_category value. The homepage "Latest
+ * Arrivals" carousel blocks and the category cards block both filter on
+ * field_category_term, not field_category, so without this the carousels
+ * stay empty even though the Car nodes themselves exist.
+ */
+function carshowroom_setup_update_10009() {
+  $labels = [
+    'suv' => ['SUV', 'Spacious, rugged and built for every road, from city streets to weekend getaways.'],
+    'sportcars' => ['Sport Cars', 'Performance-tuned engines and sharp handling for drivers who want more.'],
+    'sedan' => ['Sedan', 'Comfortable, efficient and refined, the smart choice for every day.'],
+  ];
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $terms = [];
+  $created_terms = [];
+  foreach ($labels as $key => [$name, $desc]) {
+    $existing = $term_storage->loadByProperties(['vid' => 'car_category', 'name' => $name]);
+    if ($existing) {
+      $terms[$key] = reset($existing);
+    }
+    else {
+      $term = Term::create([
+        'vid' => 'car_category',
+        'name' => $name,
+        'description' => ['value' => $desc, 'format' => 'plain_text'],
+      ]);
+      $term->save();
+      $terms[$key] = $term;
+      $created_terms[] = $name;
+    }
+  }
+
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $node_storage->getQuery()->accessCheck(FALSE)->condition('type', 'car')->execute();
+  $nodes = $node_storage->loadMultiple($ids);
+
+  $linked = 0;
+  foreach ($nodes as $node) {
+    if (!$node->hasField('field_category_term')) {
+      return 'field_category_term does not exist on the Car content type yet.';
+    }
+    if (!$node->get('field_category_term')->isEmpty()) {
+      continue;
+    }
+    $cat = $node->get('field_category')->value;
+    if (isset($terms[$cat])) {
+      $node->set('field_category_term', $terms[$cat]->id());
+      $node->save();
+      $linked++;
+    }
+  }
+
+  $msg = "$linked Car node(s) linked to their category term.";
+  if ($created_terms) {
+    $msg .= ' Created terms: ' . implode(', ', $created_terms) . '.';
+  }
+  return $msg;
 }
 
 /**
