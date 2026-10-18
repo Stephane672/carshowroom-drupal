@@ -1,0 +1,29 @@
+uuid: 15ecda47-c9cd-44dc-aed6-1929ff491ae3
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.cars_by_category
+  module:
+    - system
+    - views
+  theme:
+    - olivero
+id: olivero_views_block__cars_by_category_block_4
+theme: olivero
+region: content_below
+weight: 0
+provider: null
+plugin: 'views_block:cars_by_category-block_4'
+settings:
+  id: 'views_block:cars_by_category-block_4'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

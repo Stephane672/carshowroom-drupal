@@ -1,0 +1,19 @@
+uuid: 00181ca2-97c8-479d-b5ba-dc3f0e33fcc7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_subtitle
+    - node.type.superhighlight_slide
+id: node.superhighlight_slide.field_slide_subtitle
+field_name: field_slide_subtitle
+entity_type: node
+bundle: superhighlight_slide
+label: Subtitle
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,38 @@
+uuid: 5d05ded1-587d-40a5-b057-497494d86d4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_image
+    - node.type.superhighlight_slide
+  module:
+    - image
+id: node.superhighlight_slide.field_slide_image
+field_name: field_slide_image
+entity_type: node
+bundle: superhighlight_slide
+label: 'Background image'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: superhighlight
+  file_extensions: 'png jpg jpeg webp'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+field_type: image

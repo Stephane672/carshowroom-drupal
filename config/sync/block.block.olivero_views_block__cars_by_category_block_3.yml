@@ -1,0 +1,29 @@
+uuid: 67520241-5d90-4704-bbcd-96203f7fbd7b
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.cars_by_category
+  module:
+    - system
+    - views
+  theme:
+    - olivero
+id: olivero_views_block__cars_by_category_block_3
+theme: olivero
+region: content_below
+weight: 0
+provider: null
+plugin: 'views_block:cars_by_category-block_3'
+settings:
+  id: 'views_block:cars_by_category-block_3'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /vehicles/sedan

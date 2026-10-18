@@ -1,0 +1,23 @@
+uuid: 85637a44-05dd-4b5f-88ef-3da6d9c0af3f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_condition
+    - node.type.car
+  module:
+    - options
+id: node.car.field_condition
+field_name: field_condition
+entity_type: node
+bundle: car
+label: Condition
+description: 'Select whether this car is Brand New or Second Hand.'
+required: true
+translatable: false
+default_value:
+  -
+    value: brand_new
+default_value_callback: ''
+settings: {  }
+field_type: list_string

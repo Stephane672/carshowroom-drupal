@@ -1,0 +1,23 @@
+uuid: 6f4b5645-ddca-433f-bd9b-65c82f8cb3d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_weight
+    - node.type.superhighlight_slide
+id: node.superhighlight_slide.field_slide_weight
+field_name: field_slide_weight
+entity_type: node
+bundle: superhighlight_slide
+label: 'Order (lowest number first)'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

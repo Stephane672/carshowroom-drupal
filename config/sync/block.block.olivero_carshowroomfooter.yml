@@ -1,0 +1,25 @@
+uuid: 0e643475-337e-42f9-9c2f-484c97267e8a
+langcode: en
+status: true
+dependencies:
+  module:
+    - carshowroom_ui
+  theme:
+    - olivero
+id: olivero_carshowroomfooter
+theme: olivero
+region: footer_top
+weight: -8
+provider: null
+plugin: carshowroom_footer
+settings:
+  id: carshowroom_footer
+  label: 'Car Showroom footer'
+  label_display: '0'
+  provider: carshowroom_ui
+  facebook: 'https://www.facebook.com/share/1C9rY1fSG5/?mibextid=wwXIfr'
+  instagram: 'https://www.instagram.com/julian___ls/'
+  linkedin: 'https://www.linkedin.com/in/julian-l-241b4318b?utm_source=share_via&utm_content=profile&utm_medium=member_ios'
+  youtube: 'https://www.youtube.com/'
+  copyright: 'Car Showroom Mauritius. All rights reserved.'
+visibility: {  }

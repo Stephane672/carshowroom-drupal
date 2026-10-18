@@ -1,0 +1,23 @@
+uuid: b504ee1c-c41e-49ce-895d-e5fea516bb9f
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.car
+  module:
+    - node
+id: car_vehicle_pages
+label: 'Car vehicle pages'
+type: 'canonical_entities:node'
+pattern: '/vehicles/[node:field_category_term:entity:name]/[node:title]'
+selection_criteria:
+  93e6dc95-41df-45cf-a26d-780ac4fa7b77:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      car: car
+selection_logic: and
+weight: -5
+relationships: {  }

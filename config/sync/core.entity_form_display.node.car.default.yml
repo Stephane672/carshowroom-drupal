@@ -1,0 +1,156 @@
+uuid: 27292285-1e24-4b24-960c-bb86a25fae26
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.car.field_category
+    - field.field.node.car.field_category_term
+    - field.field.node.car.field_condition
+    - field.field.node.car.field_consumption
+    - field.field.node.car.field_engine
+    - field.field.node.car.field_image
+    - field.field.node.car.field_price
+    - field.field.node.car.field_seats
+    - field.field.node.car.field_show_in_carousel
+    - field.field.node.car.field_transmission
+    - field.field.node.car.field_year
+    - image.style.thumbnail
+    - node.type.car
+  module:
+    - image
+    - path
+id: node.car.default
+targetEntityType: node
+bundle: car
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_category:
+    type: options_select
+    weight: 137
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_category_term:
+    type: options_select
+    weight: 139
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_condition:
+    type: options_select
+    weight: 140
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_consumption:
+    type: string_textfield
+    weight: 134
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_engine:
+    type: string_textfield
+    weight: 132
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_image:
+    type: image_image
+    weight: 138
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_price:
+    type: string_textfield
+    weight: 135
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_seats:
+    type: number
+    weight: 136
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_show_in_carousel:
+    type: boolean_checkbox
+    weight: 141
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_transmission:
+    type: string_textfield
+    weight: 133
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_year:
+    type: string_textfield
+    weight: 131
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap_index_now:
+    weight: 130
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 120
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  sticky: true

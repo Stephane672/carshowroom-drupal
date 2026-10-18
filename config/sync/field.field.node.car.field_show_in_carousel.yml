@@ -1,0 +1,23 @@
+uuid: fdd4a8ea-2273-40a5-b81f-10721a378616
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_show_in_carousel
+    - node.type.car
+id: node.car.field_show_in_carousel
+field_name: field_show_in_carousel
+entity_type: node
+bundle: car
+label: 'Show in carousel'
+description: "Controls whether this car appears in its category's homepage carousel (SUV/Sportcars/Sedan). It will still appear on the full vehicle listing pages either way."
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Show
+  off_label: Hide
+field_type: boolean

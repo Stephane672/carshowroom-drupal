@@ -1,0 +1,11 @@
+uuid: 09beb260-0d40-44e7-8a2e-3cc675ac6832
+langcode: en
+status: true
+dependencies: {  }
+id: node__car
+label: 'Content: Car'
+tags:
+  description: '[node:title] – [node:field_year] model, [node:field_engine] engine, [node:field_transmission] transmission. Priced at [node:field_price] from [site:name].'
+  og_description: '[node:field_year] [node:title] - [node:field_engine] engine, [node:field_transmission] transmission. Priced at [node:field_price] from [site:name].'
+  og_image: '[node:field_image]'
+  og_title: '[node:title] | [site:name]'

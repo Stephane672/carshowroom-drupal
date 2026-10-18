@@ -1,0 +1,23 @@
+uuid: 586492e3-4142-457f-965b-c7acbbf10806
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_link
+    - node.type.superhighlight_slide
+  module:
+    - link
+id: node.superhighlight_slide.field_slide_link
+field_name: field_slide_link
+entity_type: node
+bundle: superhighlight_slide
+label: 'Button link'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 17
+field_type: link

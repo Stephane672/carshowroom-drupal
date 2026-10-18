@@ -1,0 +1,18 @@
+uuid: 352b77e4-109b-40cc-b67f-530684da3c89
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Car
+type: car
+description: 'A vehicle listing (SUV, Sport Car or Sedan) shown in the showroom catalogue.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

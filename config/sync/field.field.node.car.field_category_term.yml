@@ -1,0 +1,29 @@
+uuid: 74cc9bb7-6c2b-42f8-9eb9-fd92257c5743
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category_term
+    - node.type.car
+    - taxonomy.vocabulary.car_category
+id: node.car.field_category_term
+field_name: field_category_term
+entity_type: node
+bundle: car
+label: Category
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      car_category: car_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

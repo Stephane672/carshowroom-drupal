@@ -1,0 +1,29 @@
+uuid: befa21ea-7a71-49ae-9696-611d51ed0bd1
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.cars_by_category
+  module:
+    - system
+    - views
+  theme:
+    - olivero
+id: olivero_views_block__cars_by_category_block_2
+theme: olivero
+region: content_below
+weight: 0
+provider: null
+plugin: 'views_block:cars_by_category-block_2'
+settings:
+  id: 'views_block:cars_by_category-block_2'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /vehicles/sportcars

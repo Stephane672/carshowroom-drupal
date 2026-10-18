@@ -1,0 +1,9 @@
+uuid: 1328f597-c5cd-4d4a-a0c2-78af6f9ded00
+langcode: en
+status: true
+dependencies: {  }
+name: 'Car Category'
+vid: car_category
+description: 'Vehicle category classification used to group cars on the showroom site (SUV, Sport Cars, Sedan).'
+weight: 0
+new_revision: false

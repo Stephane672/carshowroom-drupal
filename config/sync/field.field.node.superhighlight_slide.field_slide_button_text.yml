@@ -1,0 +1,19 @@
+uuid: 04aab798-6c08-4fcc-a03e-f17b9eae308b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_button_text
+    - node.type.superhighlight_slide
+id: node.superhighlight_slide.field_slide_button_text
+field_name: field_slide_button_text
+entity_type: node
+bundle: superhighlight_slide
+label: 'Button text'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

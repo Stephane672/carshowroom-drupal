@@ -1,0 +1,23 @@
+uuid: 3ed4d851-cd21-462a-9094-e0d7a00a1808
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_seats
+    - node.type.car
+id: node.car.field_seats
+field_name: field_seats
+entity_type: node
+bundle: car
+label: Seats
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

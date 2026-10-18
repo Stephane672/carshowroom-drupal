@@ -1,0 +1,27 @@
+uuid: eb826da2-9c16-4f1e-8c3d-f0ded0ac7ad8
+langcode: en
+status: true
+dependencies:
+  module:
+    - carshowroom_ui
+    - system
+  theme:
+    - olivero
+id: olivero_superhighlightcarousel
+theme: olivero
+region: highlighted
+weight: -5
+provider: null
+plugin: carshowroom_superhighlight
+settings:
+  id: carshowroom_superhighlight
+  label: 'Super Highlight carousel'
+  label_display: '0'
+  provider: carshowroom_ui
+  interval: 6
+  max_slides: 8
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

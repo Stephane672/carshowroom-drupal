@@ -1,0 +1,25 @@
+uuid: d6cfbf93-fd71-4925-b38b-688bc0427dd1
+langcode: en
+status: true
+dependencies:
+  module:
+    - carshowroom_ui
+    - system
+  theme:
+    - olivero
+id: olivero_carcategorycards
+theme: olivero
+region: highlighted
+weight: 0
+provider: null
+plugin: carshowroom_category_cards
+settings:
+  id: carshowroom_category_cards
+  label: 'Our Vehicle Categories'
+  label_display: visible
+  provider: carshowroom_ui
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /vehicles

@@ -1,0 +1,11 @@
+uuid: ae7ba3d7-137b-44f1-b42e-226ba2ddf7a5
+langcode: en
+status: true
+dependencies: {  }
+name: 'Super Highlight slide'
+type: superhighlight_slide
+description: 'A slide for the home page Super Highlight carousel.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

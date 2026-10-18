@@ -1,0 +1,27 @@
+uuid: 068b3349-86af-4e9b-944b-b142a9a54851
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_condition
+field_name: field_condition
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: brand_new
+      label: 'Brand New'
+    -
+      value: second_hand
+      label: 'Second Hand'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
