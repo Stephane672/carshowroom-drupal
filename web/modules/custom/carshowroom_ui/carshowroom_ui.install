@@ -98,3 +98,69 @@ function carshowroom_ui_install() {
     ->set('verify_mail', FALSE)
     ->save();
 }
+
+/**
+ * Re-point Super Highlight slide images to the git-tracked files under
+ * public://superhighlight/, so they survive Render's ephemeral disk instead
+ * of relying on images uploaded at runtime through the admin UI.
+ */
+function carshowroom_ui_update_10001() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $file_storage = \Drupal::entityTypeManager()->getStorage('file');
+
+  $map = [
+    'Welcome to Car Showroom' => 'public://superhighlight/suv_superhighlight_0.webp',
+    'Performance Redefined' => 'public://superhighlight/sport_car_superhighlight.webp',
+    'Comfort for Every Journey' => 'public://superhighlight/sedan_superhighlight (1).jpg',
+    'Expert Services' => 'public://superhighlight/expert_superhighlight.png',
+  ];
+
+  $updated = [];
+  $skipped = [];
+
+  foreach ($map as $title => $uri) {
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'superhighlight_slide')
+      ->condition('title', $title)
+      ->execute();
+    if (!$ids) {
+      $skipped[] = "$title (node not found)";
+      continue;
+    }
+
+    $real_path = \Drupal::service('file_system')->realpath($uri);
+    if (!$real_path || !file_exists($real_path)) {
+      $skipped[] = "$title ($uri not found on disk)";
+      continue;
+    }
+
+    $existing_files = $file_storage->loadByProperties(['uri' => $uri]);
+    if ($existing_files) {
+      $file = reset($existing_files);
+    }
+    else {
+      $file = \Drupal\file\Entity\File::create([
+        'uri' => $uri,
+        'uid' => 1,
+        'status' => 1,
+      ]);
+      $file->save();
+    }
+
+    foreach ($storage->loadMultiple($ids) as $node) {
+      $node->set('field_slide_image', [
+        'target_id' => $file->id(),
+        'alt' => $title . ' - Car Showroom Mauritius',
+      ]);
+      $node->save();
+      $updated[] = $title;
+    }
+  }
+
+  $msg = count($updated) . ' Super Highlight slide image(s) updated.';
+  if ($skipped) {
+    $msg .= ' Skipped: ' . implode(', ', $skipped);
+  }
+  return $msg;
+}
