@@ -11,6 +11,13 @@
 /web/robots.txt
 /web/INSTALL.txt
 /web/README.md
+/web/themes/
+/web/profiles/
+/web/.gitignore
+/web/modules/.gitignore
+/web/sites/.gitignore
+/web/sites/default/.gitignore
+/recipes/
 
 # Drupal runtime-generated, not source.
 /web/sites/default/files/styles/
