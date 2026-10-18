@@ -28,7 +28,8 @@
         "drupal/robotstxt": "^1.6",
         "drupal/simple_sitemap": "^4.2",
         "drupal/token": "^1.17",
-        "drush/drush": "^13.8"
+        "drush/drush": "^13.8",
+        "twig/twig": "3.28.0"
     },
     "conflict": {
         "drupal/drupal": "*"
