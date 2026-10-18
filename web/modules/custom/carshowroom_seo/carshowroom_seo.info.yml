@@ -1,0 +1,12 @@
+name: 'Car Showroom SEO'
+type: module
+description: 'Adds the Metatag field to Basic pages and sets meta titles, descriptions, Open Graph and Twitter tags.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:path_alias
+  - metatag:metatag
+  - metatag:metatag_open_graph
+  - metatag:metatag_twitter_cards
+  - metatag:metatag_facebook

@@ -1,0 +1,23 @@
+# Rebuilt by `composer install` during the Docker build — not tracked here.
+/vendor/
+/web/core/
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/autoload.php
+/web/index.php
+/web/update.php
+/web/.htaccess
+/web/robots.txt
+/web/INSTALL.txt
+/web/README.md
+
+# Drupal runtime-generated, not source.
+/web/sites/default/files/styles/
+/web/sites/default/files/css/
+/web/sites/default/files/js/
+/web/sites/default/files/php/
+/web/sites/default/settings.local.php
+
+# Never commit real local credentials.
+/web/sites/default/settings.php

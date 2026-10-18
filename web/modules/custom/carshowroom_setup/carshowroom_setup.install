@@ -1,0 +1,448 @@
+<?php
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\file\Entity\File;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\system\Entity\Menu;
+
+function _carshowroom_setup_cars(): array {
+  return [
+    'suv' => [
+      ['Sportage Prestige', '2026', '2.0L Petrol', 'Automatic', '8.4 L/100km', '5', 'Rs 2,090,000'],
+      ['Sorento Hybrid', '2026', '1.6L Turbo Hybrid', 'Automatic', '6.1 L/100km', '7', 'Rs 3,290,000'],
+      ['Seltos GT-Line', '2026', '1.5L Turbo', 'DCT', '7.2 L/100km', '5', 'Rs 1,790,000'],
+      ['Sonet Urban', '2026', '1.2L Petrol', 'Manual', '6.5 L/100km', '5', 'Rs 1,190,000'],
+      ['Stonic Smart', '2026', '1.0L Turbo', 'Automatic', '5.8 L/100km', '5', 'Rs 1,290,000'],
+      ['Telluride Explorer', '2026', '3.8L V6', 'Automatic', '10.9 L/100km', '8', 'Rs 4,250,000'],
+      ['EV6 Air', '2026', 'Electric 77 kWh', 'Single-speed', '16.5 kWh/100km', '5', 'Rs 3,890,000'],
+      ['Niro Hybrid', '2026', '1.6L Hybrid', 'DCT', '4.9 L/100km', '5', 'Rs 2,190,000'],
+      ['Sportage Diesel AWD', '2026', '2.0L Diesel', 'Automatic', '6.9 L/100km', '5', 'Rs 2,590,000'],
+      ['Carens Family SUV', '2026', '1.5L Petrol', 'CVT', '7.4 L/100km', '7', 'Rs 1,690,000'],
+      ['Trailblazer Adventure', '2026', '2.2L Diesel', 'Automatic', '7.6 L/100km', '7', 'Rs 2,450,000'],
+      ['Outback Trek', '2026', '2.5L Petrol AWD', 'CVT', '7.9 L/100km', '5', 'Rs 2,090,000'],
+    ],
+    'sportcars' => [
+      ['Stinger GT', '2026', '3.3L Twin-Turbo V6', 'Automatic', '10.2 L/100km', '4', 'Rs 5,450,000'],
+      ['Velocity R Coupe', '2026', '2.5L Turbo', 'DCT', '8.8 L/100km', '4', 'Rs 4,690,000'],
+      ['Apex GT Roadster', '2026', '3.0L Inline-6', 'Automatic', '9.6 L/100km', '2', 'Rs 6,890,000'],
+      ['Thunder S Coupe', '2026', '5.0L V8', 'Manual', '12.4 L/100km', '2', 'Rs 7,950,000'],
+      ['Pulse EV GT', '2026', 'Dual Motor Electric', 'Single-speed', '18.9 kWh/100km', '4', 'Rs 6,250,000'],
+      ['Falcon Turbo', '2026', '2.0L Turbo', 'Manual', '8.1 L/100km', '2', 'Rs 3,990,000'],
+      ['Mirage RS', '2026', '4.0L Flat-6', 'PDK', '11.3 L/100km', '2', 'Rs 9,450,000'],
+      ['Blaze Hot Hatch', '2026', '2.0L Turbo', 'DCT', '7.9 L/100km', '4', 'Rs 3,290,000'],
+      ['Eclipse Cabrio', '2026', '2.0L Turbo', 'Automatic', '8.5 L/100km', '4', 'Rs 4,150,000'],
+      ['Titan Track Edition', '2026', '3.5L Twin-Turbo V6', 'Automatic', '11.8 L/100km', '2', 'Rs 8,750,000'],
+      ['Vortex Spyder', '2026', '3.0L Twin-Turbo V6', 'DCT', '9.9 L/100km', '2', 'Rs 7,290,000'],
+      ['Raptor GTS', '2026', '4.2L V8', 'Automatic', '12.9 L/100km', '2', 'Rs 10,950,000'],
+    ],
+    'sedan' => [
+      ['K5 GT-Line', '2026', '2.5L Turbo', 'Automatic', '7.8 L/100km', '5', 'Rs 2,790,000'],
+      ['Cerato Sport', '2026', '2.0L Petrol', 'CVT', '6.9 L/100km', '5', 'Rs 1,890,000'],
+      ['Picanto City', '2026', '1.2L Petrol', 'Manual', '5.2 L/100km', '5', 'Rs 890,000'],
+      ['Rio Comfort', '2026', '1.4L Petrol', 'Automatic', '5.9 L/100km', '5', 'Rs 1,150,000'],
+      ['K8 Hybrid', '2026', '1.6L Turbo Hybrid', 'Automatic', '5.4 L/100km', '5', 'Rs 3,150,000'],
+      ['Optima Executive', '2026', '2.4L Petrol', 'Automatic', '8.0 L/100km', '5', 'Rs 2,390,000'],
+      ['Forte Turbo', '2026', '1.6L Turbo', 'DCT', '7.1 L/100km', '5', 'Rs 1,990,000'],
+      ['Cadenza Luxury', '2026', '3.5L V6', 'Automatic', '9.9 L/100km', '5', 'Rs 3,690,000'],
+      ['EV Sedan Long Range', '2026', 'Electric 84 kWh', 'Single-speed', '15.2 kWh/100km', '5', 'Rs 3,990,000'],
+      ['Accent Saver', '2026', '1.5L Petrol', 'Manual', '5.6 L/100km', '5', 'Rs 990,000'],
+      ['Elantra Smart', '2026', '2.0L Petrol', 'CVT', '6.4 L/100km', '5', 'Rs 1,450,000'],
+      ['Camry Grand', '2026', '2.5L Hybrid', 'Automatic', '4.8 L/100km', '5', 'Rs 2,990,000'],
+    ],
+  ];
+}
+
+function _carshowroom_setup_cards(string $label, array $cars): string {
+  $css = '<style>.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px;margin:24px 0}'
+    . '.cs-card{border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}'
+    . '.cs-card .cs-top{background:linear-gradient(135deg,#05141f,#3a6ea5);color:#fff;padding:36px 16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center}'
+    . '.cs-card .cs-body{padding:16px}.cs-card h3{margin:0 0 8px;font-size:1.15rem}'
+    . '.cs-card ul{list-style:none;margin:0 0 12px;padding:0;font-size:.92rem;color:#333}'
+    . '.cs-card li{padding:2px 0}.cs-price{font-weight:700;font-size:1.05rem;color:#05141f}</style>';
+  $html = $css . '<div class="cs-grid">';
+  foreach ($cars as $c) {
+    $html .= '<article class="cs-card"><div class="cs-top">' . $label . '</div><div class="cs-body">'
+      . '<h3>' . $c[0] . '</h3><ul>'
+      . '<li><strong>Year:</strong> ' . $c[1] . '</li>'
+      . '<li><strong>Engine:</strong> ' . $c[2] . '</li>'
+      . '<li><strong>Transmission:</strong> ' . $c[3] . '</li>'
+      . '<li><strong>Consumption:</strong> ' . $c[4] . '</li>'
+      . '<li><strong>Seats:</strong> ' . $c[5] . '</li></ul>'
+      . '<p class="cs-price">From ' . $c[6] . '</p></div></article>';
+  }
+  return $html . '</div>';
+}
+
+function _carshowroom_setup_category_cards(): string {
+  $cats = [
+    'suv' => ['SUV', 'Spacious, rugged and built for every road, from city streets to weekend getaways.'],
+    'sportcars' => ['Sport Cars', 'Performance-tuned engines and sharp handling for drivers who want more.'],
+    'sedan' => ['Sedan', 'Comfortable, efficient and refined, the smart choice for every day.'],
+  ];
+  $html = '<div class="cs-cat-grid">';
+  foreach ($cats as $key => [$name, $desc]) {
+    $html .= '<a class="cs-cat-card cs-cat-card--' . $key . '" href="/vehicles/' . $key . '">'
+      . '<div class="cs-cat-card__img"></div>'
+      . '<div class="cs-cat-card__body">'
+      . '<p class="cs-cat-card__desc">' . $desc . '</p>'
+      . '<h3 class="cs-cat-card__name">' . $name . '</h3>'
+      . '<span class="cs-cat-card__role">12 models available</span>'
+      . '</div></a>';
+  }
+  return $html . '</div>';
+}
+
+function carshowroom_setup_install() {
+  $type = NodeType::load('page');
+  if (!$type) {
+    $type = NodeType::create(['type' => 'page', 'name' => 'Basic page', 'display_submitted' => FALSE]);
+    $type->save();
+  }
+  if (!FieldStorageConfig::loadByName('node', 'body')) {
+    FieldStorageConfig::create([
+      'field_name' => 'body',
+      'entity_type' => 'node',
+      'type' => 'text_with_summary',
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('node', 'page', 'body')) {
+    node_add_body_field($type);
+  }
+
+  if (!Menu::load('main')) {
+    Menu::create(['id' => 'main', 'label' => 'Main navigation'])->save();
+  }
+
+  $make = function (string $title, string $alias, string $body) {
+    $node = Node::create([
+      'type' => 'page',
+      'title' => $title,
+      'status' => 1,
+      'promote' => 0,
+      'path' => ['alias' => $alias],
+      'body' => ['value' => $body, 'format' => 'full_html'],
+    ]);
+    $node->save();
+    return $node;
+  };
+
+  $home = $make('Car Showroom Mauritius - New Cars for Sale', '/home',
+    '<h2>Find your next car in Mauritius</h2><p>Browse our range of SUVs, sport cars and sedans, backed by expert advice, financing and after-sales service.</p>'
+    . '<h2>Our vehicle categories</h2>' . _carshowroom_setup_category_cards()
+    . '<h2>Why buy from us</h2><p>Genuine warranty, transparent pricing and a dedicated service centre.</p>');
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/node/' . $home->id())->save();
+
+  $make('Our Vehicles', '/vehicles',
+    '<h2>Choose a category</h2><p>Explore our current range by body type.</p>'
+    . '<h3><a href="/vehicles/suv">SUV</a></h3><h3><a href="/vehicles/sportcars">Sportcars</a></h3><h3><a href="/vehicles/sedan">Sedan</a></h3>');
+
+  $make('Car Showroom Services', '/services',
+    '<h2>Sales and financing</h2><p>Tailored leasing and financing plans for every budget.</p>'
+    . '<h2>Maintenance and repairs</h2><p>Scheduled servicing, genuine parts and certified technicians.</p>'
+    . '<h2>Test drives and trade-in</h2><p>Book a test drive or get a fair valuation for your current car.</p>');
+
+  $cats = [
+    'suv' => ['SUV', 'SUV Cars for Sale in Mauritius', 'Twelve SUV models with engine, transmission, consumption, seating and price details.'],
+    'sportcars' => ['Sportcars', 'Sport Cars for Sale in Mauritius', 'Twelve high-performance sport cars with full specifications and prices.'],
+    'sedan' => ['Sedan', 'Sedan Cars for Sale in Mauritius', 'Twelve sedans for city and family driving, with specifications and prices.'],
+  ];
+  $cars = _carshowroom_setup_cars();
+  foreach ($cats as $key => [$label, $title, $intro]) {
+    $body = '<p>' . $intro . '</p><h2>Available ' . $label . ' models</h2>'
+      . _carshowroom_setup_cards($label, $cars[$key])
+      . '<h2>Interested in a ' . $label . '?</h2><p>Contact our sales team to book a test drive.</p>';
+    $make($title, '/vehicles/' . $key, $body);
+  }
+
+  $veh = MenuLinkContent::create([
+    'title' => 'Vehicles',
+    'link' => ['uri' => 'internal:/vehicles'],
+    'menu_name' => 'main',
+    'weight' => 0,
+    'expanded' => TRUE,
+  ]);
+  $veh->save();
+  $w = 0;
+  foreach ($cats as $key => [$label]) {
+    MenuLinkContent::create([
+      'title' => $label,
+      'link' => ['uri' => 'internal:/vehicles/' . $key],
+      'menu_name' => 'main',
+      'parent' => 'menu_link_content:' . $veh->uuid(),
+      'weight' => $w++,
+    ])->save();
+  }
+  MenuLinkContent::create([
+    'title' => 'Services',
+    'link' => ['uri' => 'internal:/services'],
+    'menu_name' => 'main',
+    'weight' => 1,
+  ])->save();
+}
+
+function carshowroom_setup_update_10001() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $node = NULL;
+
+  $front = \Drupal::config('system.site')->get('page.front');
+  if ($front && preg_match('#/node/(\d+)#', $front, $m)) {
+    $node = $storage->load($m[1]);
+  }
+  if (empty($node)) {
+    $ids = $storage->getQuery()->accessCheck(FALSE)->condition('type', 'page')->condition('title', 'Car Showroom Mauritius - New Cars for Sale')->range(0, 1)->execute();
+    if ($ids) {
+      $node = $storage->load(reset($ids));
+    }
+  }
+  if (empty($node)) {
+    return 'Home page node not found; no changes made.';
+  }
+
+  $body = $node->get('body')->value;
+  $cards = _carshowroom_setup_category_cards();
+  $updated = preg_replace('#<h2>Our vehicle categories</h2>.*?</ul>#s', '<h2>Our vehicle categories</h2>' . $cards, $body, 1, $count);
+  if (!$count) {
+    $updated = preg_replace('#<h2>Our vehicle categories</h2>.*?(?=<h2>|$)#s', '<h2>Our vehicle categories</h2>' . $cards, $body, 1, $count);
+  }
+  if ($count) {
+    $node->set('body', ['value' => $updated, 'format' => 'full_html']);
+    $node->save();
+    return 'Home page vehicle categories replaced with cards.';
+  }
+  return 'Pattern not found in home page body; no changes made.';
+}
+
+function carshowroom_setup_update_10002() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $cars = _carshowroom_setup_cars();
+  $labels = ['suv' => 'SUV', 'sportcars' => 'Sportcars', 'sedan' => 'Sedan'];
+  $messages = [];
+
+  foreach ($labels as $key => $label) {
+    $path = $alias_manager->getPathByAlias('/vehicles/' . $key);
+    if (!preg_match('#/node/(\d+)#', $path, $m)) {
+      $messages[] = "Category page for $key not found.";
+      continue;
+    }
+    $node = $storage->load($m[1]);
+    if (empty($node)) {
+      $messages[] = "Category node for $key not found.";
+      continue;
+    }
+    $body = $node->get('body')->value;
+    $grid = _carshowroom_setup_cards($label, $cars[$key]);
+    $heading = '<h2>Available ' . $label . ' models</h2>';
+    $pattern = '#' . preg_quote($heading, '#') . '.*?(?=<h2>Interested in)#s';
+    $updated = preg_replace($pattern, $heading . $grid, $body, 1, $count);
+    if ($count) {
+      $node->set('body', ['value' => $updated, 'format' => 'full_html']);
+      $node->save();
+      $messages[] = "$label page updated to 12 cars.";
+    }
+    else {
+      $messages[] = "$label page: card grid pattern not found, no changes made.";
+    }
+  }
+
+  $front = \Drupal::config('system.site')->get('page.front');
+  if ($front && preg_match('#/node/(\d+)#', $front, $m)) {
+    $home = $storage->load($m[1]);
+    if (!empty($home)) {
+      $body = $home->get('body')->value;
+      $updated = str_replace('10 models available', '12 models available', $body, $count);
+      if ($count) {
+        $home->set('body', ['value' => $updated, 'format' => 'full_html']);
+        $home->save();
+        $messages[] = 'Home page category tags updated to 12 models available.';
+      }
+    }
+  }
+
+  return implode(' ', $messages);
+}
+
+function carshowroom_setup_update_10003() {
+  if (!\Drupal::entityTypeManager()->hasDefinition('node')
+    || !\Drupal\field\Entity\FieldConfig::loadByName('node', 'car', 'field_category')) {
+    return 'Car content type / fields not found yet; run this update again after creating them.';
+  }
+
+  $cars = _carshowroom_setup_cars();
+  $created = 0;
+
+  foreach ($cars as $category => $list) {
+    foreach ($list as $c) {
+      [$name, $year, $engine, $transmission, $consumption, $seats, $price] = $c;
+
+      $existing = \Drupal::entityTypeManager()->getStorage('node')
+        ->getQuery()->accessCheck(FALSE)
+        ->condition('type', 'car')
+        ->condition('title', $name)
+        ->range(0, 1)
+        ->execute();
+      if ($existing) {
+        continue;
+      }
+
+      $node = Node::create([
+        'type' => 'car',
+        'title' => $name,
+        'status' => 1,
+        'field_year' => $year,
+        'field_engine' => $engine,
+        'field_transmission' => $transmission,
+        'field_consumption' => $consumption,
+        'field_seats' => (int) $seats,
+        'field_price' => $price,
+        'field_category' => $category,
+      ]);
+      $node->save();
+      $created++;
+    }
+  }
+
+  return "$created Car nodes created.";
+}
+
+function carshowroom_setup_update_10004() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $labels = ['suv' => 'SUV', 'sportcars' => 'Sportcars', 'sedan' => 'Sedan'];
+  $messages = [];
+
+  foreach ($labels as $key => $label) {
+    $path = $alias_manager->getPathByAlias('/vehicles/' . $key);
+    if (!preg_match('#/node/(\d+)#', $path, $m)) {
+      $messages[] = "Category page for $key not found.";
+      continue;
+    }
+    $node = $storage->load($m[1]);
+    if (empty($node)) {
+      $messages[] = "Category node for $key not found.";
+      continue;
+    }
+    $body = $node->get('body')->value;
+    $heading = '<h2>Available ' . $label . ' models</h2>';
+    $pattern = '#' . preg_quote($heading, '#') . '.*?(?=<h2>Interested in)#s';
+    $updated = preg_replace($pattern, '', $body, 1, $count);
+    if ($count) {
+      $node->set('body', ['value' => $updated, 'format' => 'full_html']);
+      $node->save();
+      $messages[] = "$label page: hardcoded card grid removed (now shown via View block).";
+    }
+    else {
+      $messages[] = "$label page: card grid pattern not found, no changes made.";
+    }
+  }
+
+  return implode(' ', $messages);
+}
+
+function carshowroom_setup_update_10005() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $storage->getQuery()->accessCheck(FALSE)->condition('type', 'car')->execute();
+  $nodes = $storage->loadMultiple($ids);
+
+  $slugify = function (string $s): string {
+    $s = strtolower($s);
+    $s = preg_replace('/[^a-z0-9]+/', '-', $s);
+    return trim($s, '-');
+  };
+
+  $attached = 0;
+  $skipped = [];
+
+  foreach ($nodes as $node) {
+    if (!$node->hasField('field_image')) {
+      return 'field_image does not exist on the Car content type yet.';
+    }
+    if (!$node->get('field_image')->isEmpty()) {
+      continue;
+    }
+    $slug = $slugify($node->label());
+    $uri = 'public://car_images/' . $slug . '.jpg';
+    $real_path = \Drupal::service('file_system')->realpath($uri);
+    if (!$real_path || !file_exists($real_path)) {
+      $skipped[] = $node->label() . ' (' . $slug . '.jpg not found)';
+      continue;
+    }
+
+    $existing_files = \Drupal::entityTypeManager()->getStorage('file')
+      ->loadByProperties(['uri' => $uri]);
+    if ($existing_files) {
+      $file = reset($existing_files);
+    }
+    else {
+      $file = File::create([
+        'uri' => $uri,
+        'uid' => 1,
+        'status' => 1,
+      ]);
+      $file->save();
+    }
+
+    $node->set('field_image', [
+      'target_id' => $file->id(),
+      'alt' => $node->label() . ' - Car Showroom Mauritius',
+    ]);
+    $node->save();
+    $attached++;
+  }
+
+  $msg = "$attached Car node images attached.";
+  if ($skipped) {
+    $msg .= ' Skipped: ' . implode(', ', $skipped);
+  }
+  return $msg;
+}
+
+function carshowroom_setup_update_10006() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $storage->getQuery()->accessCheck(FALSE)->condition('type', 'car')->execute();
+  $nodes = $storage->loadMultiple($ids);
+
+  $updated = 0;
+
+  foreach ($nodes as $node) {
+    if (!$node->hasField('field_condition')) {
+      return 'field_condition does not exist on the Car content type yet.';
+    }
+    if (!$node->get('field_condition')->isEmpty()) {
+      continue;
+    }
+    $node->set('field_condition', 'brand_new');
+    $node->save();
+    $updated++;
+  }
+
+  return "$updated Car node(s) set to Brand New by default.";
+}
+
+/**
+ * Backfill field_show_in_carousel on existing Car nodes.
+ */
+function carshowroom_setup_update_10007() {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $storage->getQuery()->accessCheck(FALSE)->condition('type', 'car')->execute();
+  $nodes = $storage->loadMultiple($ids);
+
+  $updated = 0;
+
+  foreach ($nodes as $node) {
+    if (!$node->hasField('field_show_in_carousel')) {
+      return 'field_show_in_carousel does not exist on the Car content type yet.';
+    }
+    if (!$node->get('field_show_in_carousel')->isEmpty()) {
+      continue;
+    }
+    $node->set('field_show_in_carousel', TRUE);
+    $node->save();
+    $updated++;
+  }
+
+  return "$updated Car node(s) set to show in their carousel by default.";
+}

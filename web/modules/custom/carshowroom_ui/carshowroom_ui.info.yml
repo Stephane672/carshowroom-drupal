@@ -1,0 +1,13 @@
+name: 'Car Showroom UI'
+type: module
+description: 'Super Highlight carousel, dark mode, footer, navbar and login/register styling.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:node
+  - drupal:block
+  - drupal:user
+  - drupal:file
+  - drupal:image
+  - drupal:link
+  - drupal:field

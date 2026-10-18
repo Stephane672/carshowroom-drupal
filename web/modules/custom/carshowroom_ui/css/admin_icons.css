@@ -1,0 +1,43 @@
+
+[class*="toolbar-button--icon--"]:not(:has(.toolbar-button__icon))::before{
+  content:"" !important;
+  display:inline-block;
+  inline-size:20px;
+  block-size:20px;
+  flex:0 0 20px;
+  background-color:currentColor;
+  -webkit-mask:var(--cs-icon) center / contain no-repeat;
+  mask:var(--cs-icon) center / contain no-repeat;
+}
+.toolbar-button--icon--announcements-feed-announcement{--cs-icon:url(/core/modules/navigation/assets/icons/announcements-feed-announcement.svg);}
+.toolbar-button--icon--arrow-left{--cs-icon:url(/core/modules/navigation/assets/icons/arrow-left.svg);}
+.toolbar-button--icon--burger{--cs-icon:url(/core/modules/navigation/assets/icons/burger.svg);}
+.toolbar-button--icon--chevron{--cs-icon:url(/core/modules/navigation/assets/icons/chevron.svg);}
+.toolbar-button--icon--cross{--cs-icon:url(/core/modules/navigation/assets/icons/cross.svg);}
+.toolbar-button--icon--database{--cs-icon:url(/core/modules/navigation/assets/icons/database.svg);}
+.toolbar-button--icon--dots{--cs-icon:url(/core/modules/navigation/assets/icons/dots.svg);}
+.toolbar-button--icon--entity-user-collection{--cs-icon:url(/core/modules/navigation/assets/icons/entity-user-collection.svg);}
+.toolbar-button--icon--error{--cs-icon:url(/core/modules/navigation/assets/icons/error.svg);}
+.toolbar-button--icon--eye{--cs-icon:url(/core/modules/navigation/assets/icons/eye.svg);}
+.toolbar-button--icon--file{--cs-icon:url(/core/modules/navigation/assets/icons/file.svg);}
+.toolbar-button--icon--help{--cs-icon:url(/core/modules/navigation/assets/icons/help.svg);}
+.toolbar-button--icon--navigation-blocks{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-blocks.svg);}
+.toolbar-button--icon--navigation-content{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-content.svg);}
+.toolbar-button--icon--navigation-create{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-create.svg);}
+.toolbar-button--icon--navigation-files{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-files.svg);}
+.toolbar-button--icon--navigation-media{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-media.svg);}
+.toolbar-button--icon--navigation-user-links-user-wrapper{--cs-icon:url(/core/modules/navigation/assets/icons/navigation-user-links-user-wrapper.svg);}
+.toolbar-button--icon--pencil{--cs-icon:url(/core/modules/navigation/assets/icons/pencil.svg);}
+.toolbar-button--icon--return-left{--cs-icon:url(/core/modules/navigation/assets/icons/return-left.svg);}
+.toolbar-button--icon--shortcuts{--cs-icon:url(/core/modules/navigation/assets/icons/shortcuts.svg);}
+.toolbar-button--icon--status{--cs-icon:url(/core/modules/navigation/assets/icons/status.svg);}
+.toolbar-button--icon--system-admin-config{--cs-icon:url(/core/modules/navigation/assets/icons/system-admin-config.svg);}
+.toolbar-button--icon--system-admin-reports{--cs-icon:url(/core/modules/navigation/assets/icons/system-admin-reports.svg);}
+.toolbar-button--icon--system-admin-structure{--cs-icon:url(/core/modules/navigation/assets/icons/system-admin-structure.svg);}
+.toolbar-button--icon--system-modules-list{--cs-icon:url(/core/modules/navigation/assets/icons/system-modules-list.svg);}
+.toolbar-button--icon--system-themes-page{--cs-icon:url(/core/modules/navigation/assets/icons/system-themes-page.svg);}
+.toolbar-button--icon--throbber{--cs-icon:url(/core/modules/navigation/assets/icons/throbber.svg);}
+.toolbar-button--icon--warning{--cs-icon:url(/core/modules/navigation/assets/icons/warning.svg);}
+.toolbar-button--icon--workspaces{--cs-icon:url(/core/modules/navigation/assets/icons/workspaces.svg);}
+
+[class*="toolbar-button--icon--"]:not(:has(.toolbar-button__icon)):not([style*="--cs-icon"])::before{min-inline-size:20px;}

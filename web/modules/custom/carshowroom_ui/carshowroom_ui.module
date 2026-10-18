@@ -1,0 +1,213 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\block\Entity\Block;
+
+function carshowroom_ui_block_access(Block $block, $operation, AccountInterface $account) {
+  if ($operation === 'view' && $block->getPluginId() === 'system_menu_block:account' && $account->isAnonymous()) {
+    return AccessResult::forbidden()->addCacheContexts(['user.roles:anonymous']);
+  }
+  return AccessResult::neutral();
+}
+
+function carshowroom_ui_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'carshowroom_ui/admin_icons';
+  $attachments['#attached']['library'][] = 'carshowroom_ui/car_detail';
+  if (\Drupal::currentUser()->hasPermission('access contextual links')) {
+    $attachments['#attached']['library'][] = 'carshowroom_ui/hide_contextual';
+  }
+  $route = \Drupal::routeMatch()->getRouteName();
+  $force_global_css = in_array($route, ['entity.user.edit_form', 'entity.user.canonical'], TRUE);
+  if (\Drupal::service('router.admin_context')->isAdminRoute() && !$force_global_css) {
+    return;
+  }
+  $attachments['#attached']['library'][] = 'carshowroom_ui/global';
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'script',
+      '#value' => "(function(){try{var t=localStorage.getItem('cs-theme');if(!t){if(window.matchMedia){if(window.matchMedia('(prefers-color-scheme: dark)').matches){t='dark';}}}if(t==='dark'){document.documentElement.setAttribute('data-cs-theme','dark');}}catch(e){}})();",
+    ],
+    'cs_dark_init',
+  ];
+}
+
+function carshowroom_ui_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+  if ($node->bundle() === 'car' && $variables['view_mode'] === 'full') {
+    $share_url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+    $encoded = urlencode($share_url);
+
+    $variables['content']['cs_back_button'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['cs-back-button-wrap']],
+      '#weight' => -100,
+      'button' => [
+        '#markup' => Markup::create(
+          '<a href="#" class="cs-back-button" aria-label="' . t('Go back') . '" title="' . t('Go back') . '">'
+          . '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>'
+          . '</a>'
+        ),
+      ],
+    ];
+
+    $variables['content']['cs_share_links'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['cs-share-links']],
+      '#weight' => 100,
+      'label' => [
+        '#markup' => '<span class="cs-share-label">' . t('Share this vehicle') . '</span>',
+      ],
+      'facebook' => [
+        '#type' => 'link',
+        '#title' => Markup::create('<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg><span>' . t('Facebook') . '</span>'),
+        '#url' => Url::fromUri('https://www.facebook.com/sharer/sharer.php', ['query' => ['u' => $share_url]]),
+        '#attributes' => [
+          'class' => ['cs-share-btn', 'cs-share-btn--facebook'],
+          'target' => '_blank',
+          'rel' => 'noopener noreferrer',
+          'aria-label' => t('Share @title on Facebook', ['@title' => $node->label()]),
+        ],
+      ],
+      'linkedin' => [
+        '#type' => 'link',
+        '#title' => Markup::create('<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg><span>' . t('LinkedIn') . '</span>'),
+        '#url' => Url::fromUri('https://www.linkedin.com/sharing/share-offsite/', ['query' => ['url' => $share_url]]),
+        '#attributes' => [
+          'class' => ['cs-share-btn', 'cs-share-btn--linkedin'],
+          'target' => '_blank',
+          'rel' => 'noopener noreferrer',
+          'aria-label' => t('Share @title on LinkedIn', ['@title' => $node->label()]),
+        ],
+      ],
+      '#cache' => [
+        'contexts' => ['url'],
+      ],
+    ];
+  }
+}
+
+function carshowroom_ui_preprocess_html(array &$variables) {
+  $map = [
+    'user.login' => ['cs-auth', 'cs-auth--login'],
+    'user.pass' => ['cs-auth', 'cs-auth--login'],
+    'user.register' => ['cs-auth', 'cs-auth--register'],
+  ];
+  $route = \Drupal::routeMatch()->getRouteName();
+  if (isset($map[$route])) {
+    foreach ($map[$route] as $class) {
+      $variables['attributes']['class'][] = $class;
+    }
+  }
+  if ($route === 'entity.user.edit_form') {
+    $variables['attributes']['class'][] = 'cs-account-page';
+  }
+}
+
+function carshowroom_ui_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_login_form') {
+    $form['name']['#attributes']['placeholder'] = t('Write your username');
+    $form['pass']['#attributes']['placeholder'] = t('Enter your password');
+    $form['#prefix'] = '<div class="cs-auth-card cs-auth-card--login"><div class="cs-auth-main"><h2 class="cs-auth-title">' . t('Log In') . '</h2>';
+    $form['#suffix'] = '<p class="cs-auth-foot">' . t('You do not have an account?') . ' <a href="/user/register">' . t('Sign up') . '</a><br><a href="/user/password">' . t('You forgot your password') . '</a></p></div></div>';
+  }
+  elseif ($form_id === 'user_register_form') {
+    if (isset($form['account']['name'])) {
+      $form['account']['name']['#attributes']['placeholder'] = t('Full Name');
+    }
+    if (isset($form['account']['mail'])) {
+      $form['account']['mail']['#attributes']['placeholder'] = t('E-mail');
+    }
+    $form['#prefix'] = '<div class="cs-auth-card cs-auth-card--register"><div class="cs-auth-main"><h2 class="cs-auth-title">' . t('Create Account') . '</h2>';
+    $form['#suffix'] = '</div><aside class="cs-auth-side"><h2>' . t('Get Started') . '</h2><p>' . t('Already have an account?') . '</p><a class="cs-auth-alt" href="/user/login">' . t('Log in') . '</a></aside></div>';
+  }
+  elseif ($form_id === 'user_form') {
+    carshowroom_ui_style_account_form($form, $form_state);
+  }
+}
+
+function carshowroom_ui_style_account_form(array &$form, FormStateInterface $form_state) {
+  if (!isset($form['account'])) {
+    return;
+  }
+
+  $account = $form_state->getFormObject()->getEntity();
+  $uid = $account->id();
+
+  $form['#attributes']['class'][] = 'cs-account-form';
+  $form['#prefix'] = Markup::create('<div class="cs-account-card"><h1 class="cs-account-title">' . t('Account Settings') . '</h1><p class="cs-account-subtitle">' . t('Edit your name, avatar etc.') . '</p><div class="cs-account-body">');
+  $form['#suffix'] = Markup::create('</div></div>');
+
+  if (isset($form['account']['name'])) {
+    $form['account']['name']['#title'] = t('Your Name');
+    $form['account']['name']['#weight'] = -10;
+    $form['account']['name']['#attributes']['class'][] = 'cs-input';
+  }
+
+  if (isset($form['account']['mail'])) {
+    $form['account']['mail']['#weight'] = -5;
+    $form['account']['mail']['#attributes']['readonly'] = 'readonly';
+    $form['account']['mail']['#attributes']['class'][] = 'cs-input';
+    $form['account']['mail']['#attributes']['class'][] = 'cs-input-readonly';
+    $form['account']['mail']['#suffix'] = Markup::create('<a href="#" class="cs-change-link js-cs-email-change">' . t('Change') . '</a>');
+  }
+
+  if (isset($form['account']['current_pass']) && isset($form['account']['pass'])) {
+    $form['account']['current_pass']['#weight'] = 5;
+    $form['account']['pass']['#weight'] = 6;
+    $form['account']['current_pass']['#prefix'] = Markup::create('<div class="cs-field-row cs-row-password"><label class="cs-field-label">' . t('Password') . '</label><div class="cs-password-display"><span class="cs-dots">••••••••••</span><a href="#" class="cs-change-link js-cs-password-change">' . t('Change') . '</a></div><div class="cs-password-fields js-cs-password-fields">');
+    $form['account']['pass']['#suffix'] = Markup::create('</div></div>');
+  }
+
+  if (isset($form['account']['roles'])) {
+    $form['account']['roles']['#weight'] = 20;
+    $form['account']['roles']['#prefix'] = Markup::create('<div class="cs-roles-group">');
+    $form['account']['roles']['#suffix'] = Markup::create('</div>');
+  }
+
+  if (isset($form['user_picture'])) {
+    $placeholder_svg = '<svg class="cs-avatar-placeholder" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8.2" r="3.6" fill="#fff"/><path d="M4.2 20c0.6-4.2 4-6.8 7.8-6.8s7.2 2.6 7.8 6.8" fill="#fff"/></svg>';
+    $form['user_picture']['#prefix'] = Markup::create('<div class="cs-avatar-side"><div class="cs-avatar-circle">' . $placeholder_svg . '</div>');
+    $form['user_picture']['#suffix'] = Markup::create('<label for="edit-user-picture-0-upload" class="cs-upload-btn">' . t('Upload a picture') . '</label></div>');
+    $form['user_picture']['#open'] = TRUE;
+  }
+
+  if (isset($form['timezone'])) {
+    $form['timezone']['#attributes']['class'][] = 'cs-advanced-group';
+  }
+  if (isset($form['language'])) {
+    $form['language']['#attributes']['class'][] = 'cs-hidden-field';
+  }
+
+  $cancel_url = Url::fromRoute('entity.user.cancel_form', ['user' => $uid]);
+  if ($cancel_url->access()) {
+    $form['cs_delete_account'] = [
+      '#markup' => Markup::create(
+        '<div id="cs-delete-account-wrapper" class="cs-delete-account">'
+        . '<a href="' . $cancel_url->toString() . '" class="cs-delete-link">' . t('Delete Your Account') . '</a>'
+        . '<p>' . t('You will receive an email to confirm your decision.') . '<br>'
+        . t('Please note, that all boards you have created will be permanently erased.') . '</p>'
+        . '</div>'
+      ),
+    ];
+  }
+
+  if (isset($form['actions']['submit'])) {
+    $form['actions']['submit']['#attributes']['class'][] = 'cs-btn';
+    $form['actions']['submit']['#attributes']['class'][] = 'cs-btn-save';
+    $form['actions']['submit']['#value'] = t('Save');
+  }
+  $form['actions']['cs_cancel'] = [
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#url' => Url::fromRoute('entity.user.canonical', ['user' => $uid]),
+    '#attributes' => ['class' => ['cs-btn', 'cs-btn-cancel']],
+    '#weight' => -1,
+  ];
+
+  $form['#attached']['library'][] = 'carshowroom_ui/account_settings';
+}

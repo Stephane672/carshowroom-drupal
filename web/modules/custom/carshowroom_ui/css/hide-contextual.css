@@ -1,0 +1,4 @@
+/* hides the contextual links pencil icon site-wide */
+.contextual {
+  display: none !important;
+}

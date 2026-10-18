@@ -1,0 +1,92 @@
+<?php
+
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
+
+function carshowroom_seo_install() {
+  if (!FieldStorageConfig::loadByName('node', 'field_meta_tags')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_meta_tags',
+      'entity_type' => 'node',
+      'type' => 'metatag',
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('node', 'page', 'field_meta_tags')) {
+    FieldConfig::create([
+      'field_name' => 'field_meta_tags',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'label' => 'Meta tags',
+    ])->save();
+  }
+  $form = EntityFormDisplay::load('node.page.default')
+    ?: EntityFormDisplay::create(['targetEntityType' => 'node', 'bundle' => 'page', 'mode' => 'default', 'status' => TRUE]);
+  $form->setComponent('field_meta_tags', ['type' => 'metatag_firehose', 'weight' => 50])->save();
+
+  $cfg = \Drupal::configFactory()->getEditable('metatag.metatag_defaults.global');
+  $tags = $cfg->get('tags') ?: [];
+  $tags = [
+    'canonical_url' => '[current-page:url]',
+    'title' => '[current-page:title] | [site:name]',
+    'og_site_name' => '[site:name]',
+    'og_type' => 'website',
+    'og_url' => '[current-page:url]',
+    'og_title' => '[current-page:title]',
+    'twitter_cards_type' => 'summary_large_image',
+    'twitter_cards_title' => '[current-page:title]',
+  ] + $tags;
+  $cfg->set('tags', $tags)->save();
+
+  $meta = [
+    '/home' => [
+      'Car Showroom Mauritius | New SUVs, Sport Cars & Sedans',
+      'Browse new SUVs, sport cars and sedans in Mauritius. Compare specs and prices, book a test drive and enjoy financing and after-sales service.',
+    ],
+    '/vehicles' => [
+      'Our Vehicles | SUV, Sportcars & Sedan | Car Showroom',
+      'Explore our vehicle range by category: SUVs, sportcars and sedans, each with full specifications and prices.',
+    ],
+    '/vehicles/suv' => [
+      'SUV Cars for Sale in Mauritius | Car Showroom',
+      'Compare 10 SUV models in Mauritius with engine, transmission, fuel consumption, seating and price details. Book a test drive today.',
+    ],
+    '/vehicles/sportcars' => [
+      'Sport Cars for Sale in Mauritius | Car Showroom',
+      'Discover 10 high-performance sport cars in Mauritius with specifications and prices. Contact our team to arrange a test drive.',
+    ],
+    '/vehicles/sedan' => [
+      'Sedan Cars for Sale in Mauritius | Car Showroom',
+      'View 10 sedans for city and family driving in Mauritius, with engine, transmission, consumption and price details.',
+    ],
+    '/services' => [
+      'Car Showroom Services | Financing, Servicing & Test Drives',
+      'Financing plans, scheduled servicing, genuine parts, test drives and trade-in valuations from our Mauritius car showroom.',
+    ],
+  ];
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  foreach ($meta as $alias => [$title, $desc]) {
+    $found = $storage->loadByProperties(['alias' => $alias]);
+    if (!$found) {
+      continue;
+    }
+    $path = reset($found)->getPath();
+    if (!preg_match('#^/node/(\d+)$#', $path, $m)) {
+      continue;
+    }
+    $node = Node::load($m[1]);
+    if (!$node || !$node->hasField('field_meta_tags')) {
+      continue;
+    }
+    $node->set('field_meta_tags', serialize([
+      'title' => $title,
+      'description' => $desc,
+      'og_title' => $title,
+      'og_description' => $desc,
+      'twitter_cards_title' => $title,
+      'twitter_cards_description' => $desc,
+    ]));
+    $node->save();
+  }
+}

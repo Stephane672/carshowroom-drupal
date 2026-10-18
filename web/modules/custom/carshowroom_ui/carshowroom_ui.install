@@ -1,0 +1,100 @@
+<?php
+
+use Drupal\block\Entity\Block;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+
+function carshowroom_ui_install() {
+  $bundle = 'superhighlight_slide';
+  if (!NodeType::load($bundle)) {
+    NodeType::create([
+      'type' => $bundle,
+      'name' => 'Super Highlight slide',
+      'description' => 'A slide for the home page Super Highlight carousel.',
+      'display_submitted' => FALSE,
+    ])->save();
+  }
+
+  $fields = [
+    'field_slide_subtitle' => ['string', 'Subtitle', []],
+    'field_slide_button_text' => ['string', 'Button text', []],
+    'field_slide_link' => ['link', 'Button link', ['title' => 0]],
+    'field_slide_image' => ['image', 'Background image', ['file_extensions' => 'png jpg jpeg webp', 'file_directory' => 'superhighlight', 'alt_field_required' => FALSE]],
+    'field_slide_weight' => ['integer', 'Order (lowest number first)', []],
+  ];
+  foreach ($fields as $name => [$type, $label, $settings]) {
+    if (!FieldStorageConfig::loadByName('node', $name)) {
+      FieldStorageConfig::create(['field_name' => $name, 'entity_type' => 'node', 'type' => $type, 'cardinality' => 1])->save();
+    }
+    if (!FieldConfig::loadByName('node', $bundle, $name)) {
+      FieldConfig::create([
+        'field_name' => $name,
+        'entity_type' => 'node',
+        'bundle' => $bundle,
+        'label' => $label,
+        'required' => FALSE,
+        'settings' => $settings,
+      ])->save();
+    }
+  }
+
+  $form = EntityFormDisplay::load("node.$bundle.default")
+    ?: EntityFormDisplay::create(['targetEntityType' => 'node', 'bundle' => $bundle, 'mode' => 'default', 'status' => TRUE]);
+  $form->setComponent('title', ['type' => 'string_textfield', 'weight' => -5])
+    ->setComponent('field_slide_subtitle', ['type' => 'string_textfield', 'weight' => 1])
+    ->setComponent('field_slide_button_text', ['type' => 'string_textfield', 'weight' => 2])
+    ->setComponent('field_slide_link', ['type' => 'link_default', 'weight' => 3])
+    ->setComponent('field_slide_image', ['type' => 'image_image', 'weight' => 4])
+    ->setComponent('field_slide_weight', ['type' => 'number', 'weight' => 5])
+    ->setComponent('status', ['type' => 'boolean_checkbox', 'settings' => ['display_label' => TRUE], 'weight' => 100])
+    ->save();
+
+  $samples = [
+    ['Welcome to Car Showroom', 'Discover your next car', 'Explore SUVs', 'internal:/vehicles/suv'],
+    ['Performance Redefined', 'Sport cars', 'View Sportcars', 'internal:/vehicles/sportcars'],
+    ['Comfort for Every Journey', 'Sedans', 'Browse Sedans', 'internal:/vehicles/sedan'],
+    ['Expert Services', 'After-sales care', 'Our Services', 'internal:/services'],
+  ];
+  foreach ($samples as $i => [$title, $sub, $btn, $uri]) {
+    Node::create([
+      'type' => $bundle,
+      'title' => $title,
+      'status' => 1,
+      'uid' => 1,
+      'field_slide_subtitle' => $sub,
+      'field_slide_button_text' => $btn,
+      'field_slide_link' => ['uri' => $uri, 'title' => ''],
+      'field_slide_weight' => $i + 1,
+    ])->save();
+  }
+
+  if (!Block::load('olivero_superhighlight')) {
+    Block::create([
+      'id' => 'olivero_superhighlight',
+      'theme' => 'olivero',
+      'region' => 'hero',
+      'weight' => -10,
+      'plugin' => 'carshowroom_superhighlight',
+      'settings' => ['id' => 'carshowroom_superhighlight', 'label' => 'Super Highlight', 'label_display' => '0', 'provider' => 'carshowroom_ui', 'interval' => 6, 'max_slides' => 8],
+      'visibility' => ['request_path' => ['id' => 'request_path', 'negate' => FALSE, 'pages' => '<front>']],
+    ])->save();
+  }
+  if (!Block::load('olivero_carshowroom_footer')) {
+    Block::create([
+      'id' => 'olivero_carshowroom_footer',
+      'theme' => 'olivero',
+      'region' => 'footer_top',
+      'weight' => 0,
+      'plugin' => 'carshowroom_footer',
+      'settings' => ['id' => 'carshowroom_footer', 'label' => 'Car Showroom footer', 'label_display' => '0', 'provider' => 'carshowroom_ui'],
+    ])->save();
+  }
+
+  \Drupal::configFactory()->getEditable('user.settings')
+    ->set('register', 'visitors')
+    ->set('verify_mail', FALSE)
+    ->save();
+}
