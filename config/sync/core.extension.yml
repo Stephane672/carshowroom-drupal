@@ -83,6 +83,7 @@ module:
   workspaces_ui: 0
   pathauto: 1
   views: 10
+  minimal: 1000
 theme:
   claro: 0
   stable9: 0
