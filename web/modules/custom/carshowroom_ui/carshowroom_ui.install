@@ -351,3 +351,105 @@ function carshowroom_ui_update_10004() {
 
   return count($restored) . ' homepage carousel block(s) restored (' . implode(', ', $restored) . ').';
 }
+
+/**
+ * Create the carshowroom_dbfiles backup table and back up readable files.
+ *
+ * Render's free tier gives the web service no persistent disk: every
+ * redeploy throws away the old container's filesystem and starts a fresh
+ * one from the Docker image, which only contains whatever was committed to
+ * Git. Images uploaded live through the site (new car photos, etc.) were
+ * only ever written to that disposable disk, so they disappeared the next
+ * time the site was redeployed.
+ *
+ * From this update onward, every uploaded public file's bytes are also
+ * copied into this table (hook_file_insert()/hook_file_update() in
+ * carshowroom_ui.module), and DbFileRestoreSubscriber writes them back out
+ * to disk the first time each new container boots. The table itself lives
+ * in the external MySQL database on Clever Cloud, which is not wiped by a
+ * Render redeploy, so from here on an uploaded image survives indefinitely.
+ *
+ * This update also does a best-effort backfill of whatever public files
+ * are still readable on disk right now. A file that only ever existed on a
+ * container that has already been replaced by an earlier deploy can no
+ * longer be read from here; it is skipped, and a fresh upload of it (after
+ * this update is live) will be backed up automatically going forward.
+ */
+function carshowroom_ui_update_10005() {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('carshowroom_dbfiles')) {
+    $schema->createTable('carshowroom_dbfiles', [
+      'description' => 'Backup copy of public file bytes, kept in the persistent database so uploaded images survive container redeploys on hosts (like Render) that have no persistent disk.',
+      'fields' => [
+        'uri' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => 'The public:// URI of the file this row backs up.',
+        ],
+        'filemime' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ],
+        'filesize' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+        ],
+        'data' => [
+          'type' => 'blob',
+          'size' => 'big',
+          'not null' => TRUE,
+          'description' => 'Raw file bytes.',
+        ],
+        'changed' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'description' => 'Unix timestamp of the last backup.',
+        ],
+      ],
+      'primary key' => ['uri'],
+    ]);
+  }
+
+  $file_system = \Drupal::service('file_system');
+  $storage = \Drupal::entityTypeManager()->getStorage('file');
+  $ids = $storage->getQuery()->accessCheck(FALSE)->execute();
+
+  $backed_up = 0;
+  $missing = 0;
+  foreach ($storage->loadMultiple($ids) as $file) {
+    $uri = $file->getFileUri();
+    if (strpos($uri, 'public://') !== 0) {
+      continue;
+    }
+    $real_path = $file_system->realpath($uri);
+    if (!$real_path || !is_file($real_path)) {
+      $missing++;
+      continue;
+    }
+    $data = file_get_contents($real_path);
+    if ($data === FALSE) {
+      $missing++;
+      continue;
+    }
+    \Drupal::database()->merge('carshowroom_dbfiles')
+      ->key('uri', $uri)
+      ->fields([
+        'filemime' => $file->getMimeType(),
+        'filesize' => strlen($data),
+        'data' => $data,
+        'changed' => \Drupal::time()->getRequestTime(),
+      ])
+      ->execute();
+    $backed_up++;
+  }
+
+  $msg = "carshowroom_dbfiles table created. $backed_up file(s) backed up to the database.";
+  if ($missing) {
+    $msg .= " $missing file record(s) had no readable file on this container and were skipped - re-upload those (if any are still missing from the site) after this update is live, and they will be backed up automatically from then on.";
+  }
+  return $msg;
+}

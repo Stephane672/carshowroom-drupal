@@ -228,3 +228,72 @@ function carshowroom_ui_style_account_form(array &$form, FormStateInterface $for
 
   $form['#attached']['library'][] = 'carshowroom_ui/account_settings';
 }
+
+/**
+ * Implements hook_file_insert().
+ *
+ * Backs up newly-uploaded public files into the carshowroom_dbfiles table
+ * so they survive the next Render redeploy, which otherwise wipes anything
+ * that was not committed to Git (see DbFileRestoreSubscriber for the other
+ * half of this: restoring the bytes back to disk on a fresh container).
+ */
+function carshowroom_ui_file_insert(\Drupal\file\FileInterface $file) {
+  _carshowroom_ui_backup_file_to_db($file);
+}
+
+/**
+ * Implements hook_file_update().
+ */
+function carshowroom_ui_file_update(\Drupal\file\FileInterface $file) {
+  _carshowroom_ui_backup_file_to_db($file);
+}
+
+/**
+ * Implements hook_file_delete().
+ *
+ * Keeps the backup table from accumulating rows for files that have since
+ * been removed from the site.
+ */
+function carshowroom_ui_file_delete(\Drupal\file\FileInterface $file) {
+  $uri = $file->getFileUri();
+  if (strpos($uri, 'public://') === 0) {
+    \Drupal::database()->delete('carshowroom_dbfiles')
+      ->condition('uri', $uri)
+      ->execute();
+  }
+}
+
+/**
+ * Copies a public file's bytes into the carshowroom_dbfiles backup table.
+ */
+function _carshowroom_ui_backup_file_to_db(\Drupal\file\FileInterface $file) {
+  $uri = $file->getFileUri();
+  // Only public files need this: they are the only ones that live on the
+  // container's local, non-persistent disk. (Files committed to Git under
+  // web/sites/default/files/ already survive redeploys on their own and
+  // don't need a database backup, but backing them up too is harmless.)
+  if (strpos($uri, 'public://') !== 0) {
+    return;
+  }
+  if (!\Drupal::database()->schema()->tableExists('carshowroom_dbfiles')) {
+    // Update 10005 hasn't run yet on this environment.
+    return;
+  }
+  $real_path = \Drupal::service('file_system')->realpath($uri);
+  if (!$real_path || !is_file($real_path)) {
+    return;
+  }
+  $data = file_get_contents($real_path);
+  if ($data === FALSE) {
+    return;
+  }
+  \Drupal::database()->merge('carshowroom_dbfiles')
+    ->key('uri', $uri)
+    ->fields([
+      'filemime' => $file->getMimeType(),
+      'filesize' => strlen($data),
+      'data' => $data,
+      'changed' => \Drupal::time()->getRequestTime(),
+    ])
+    ->execute();
+}

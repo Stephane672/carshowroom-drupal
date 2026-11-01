@@ -1,0 +1,6 @@
+services:
+  carshowroom_ui.dbfile_restore_subscriber:
+    class: Drupal\carshowroom_ui\EventSubscriber\DbFileRestoreSubscriber
+    arguments: ['@file_system', '@database']
+    tags:
+      - { name: event_subscriber }
