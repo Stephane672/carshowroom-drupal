@@ -34,6 +34,31 @@ function carshowroom_ui_page_attachments(array &$attachments) {
     ],
     'cs_dark_init',
   ];
+
+  // Google Analytics (GA4) — only loaded on the live Render host, so local
+  // XAMPP development traffic never pollutes the property's data.
+  $host = \Drupal::request()->getHost();
+  if ($host === 'carshowroom-drupal.onrender.com') {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#attributes' => [
+          'async' => TRUE,
+          'src' => 'https://www.googletagmanager.com/gtag/js?id=G-R22G5QWM5M',
+        ],
+      ],
+      'cs_ga4_loader',
+    ];
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#value' => "window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-R22G5QWM5M');",
+      ],
+      'cs_ga4_config',
+    ];
+  }
 }
 
 function carshowroom_ui_preprocess_node(array &$variables) {
