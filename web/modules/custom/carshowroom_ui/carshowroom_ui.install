@@ -300,3 +300,54 @@ function carshowroom_ui_update_10003() {
   return count($restored) . ' block(s) restored (' . implode(', ', $restored) . '); '
     . count($stripped) . ' page body/bodies cleaned of the placeholder grid (' . implode(', ', $stripped) . ').';
 }
+
+/**
+ * Restore the three homepage "latest arrivals" carousel blocks.
+ *
+ * Update #10002 also deleted olivero_views_block__cars_by_category_block_4,
+ * _5 and _6. Those are NOT duplicates of anything — they are the three
+ * distinct "SUV carousel" / "Sportcars carousel" / "Sedan carousel" block
+ * displays of the cars_by_category view (titled "Latest SUV Arrivals",
+ * "Latest Sport Cars", "Latest Sedan Arrivals"), each showing a different
+ * category on the front page. Removing them took three legitimate homepage
+ * sections off the site. This recreates all three.
+ */
+function carshowroom_ui_update_10004() {
+  $block_defs = [
+    'olivero_views_block__cars_by_category_block_4' => 'views_block:cars_by_category-block_4',
+    'olivero_views_block__cars_by_category_block_5' => 'views_block:cars_by_category-block_5',
+    'olivero_views_block__cars_by_category_block_6' => 'views_block:cars_by_category-block_6',
+  ];
+
+  $restored = [];
+  foreach ($block_defs as $id => $plugin) {
+    if (Block::load($id)) {
+      continue;
+    }
+    Block::create([
+      'id' => $id,
+      'theme' => 'olivero',
+      'region' => 'content_below',
+      'weight' => 0,
+      'plugin' => $plugin,
+      'settings' => [
+        'id' => $plugin,
+        'label' => '',
+        'label_display' => 'visible',
+        'provider' => 'views',
+        'views_label' => '',
+        'items_per_page' => NULL,
+      ],
+      'visibility' => [
+        'request_path' => [
+          'id' => 'request_path',
+          'negate' => FALSE,
+          'pages' => '<front>',
+        ],
+      ],
+    ])->save();
+    $restored[] = $id;
+  }
+
+  return count($restored) . ' homepage carousel block(s) restored (' . implode(', ', $restored) . ').';
+}
