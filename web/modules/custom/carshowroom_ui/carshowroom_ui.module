@@ -26,14 +26,6 @@ function carshowroom_ui_page_attachments(array &$attachments) {
     return;
   }
   $attachments['#attached']['library'][] = 'carshowroom_ui/global';
-  $attachments['#attached']['html_head'][] = [
-    [
-      '#type' => 'html_tag',
-      '#tag' => 'script',
-      '#value' => "(function(){try{var t=localStorage.getItem('cs-theme');if(!t){if(window.matchMedia){if(window.matchMedia('(prefers-color-scheme: dark)').matches){t='dark';}}}if(t==='dark'){document.documentElement.setAttribute('data-cs-theme','dark');}}catch(e){}})();",
-    ],
-    'cs_dark_init',
-  ];
 
   // Google Analytics (GA4) — only loaded on the live Render host, so local
   // XAMPP development traffic never pollutes the property's data.

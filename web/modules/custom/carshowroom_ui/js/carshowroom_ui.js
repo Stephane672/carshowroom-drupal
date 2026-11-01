@@ -1,11 +1,6 @@
 (function (Drupal, once) {
   'use strict';
 
-  function applyTheme(t) {
-    if (t === 'dark') { document.documentElement.setAttribute('data-cs-theme', 'dark'); }
-    else if (t === 'light') { document.documentElement.setAttribute('data-cs-theme', 'light'); }
-    else { document.documentElement.removeAttribute('data-cs-theme'); }
-  }
   Drupal.behaviors.csBackButton = {
     attach: function (context) {
       once('cs-back', '.cs-back-button', context).forEach(function (btn) {
@@ -14,36 +9,6 @@
           if (window.history.length > 1) { window.history.back(); }
           else { window.location.href = '/vehicles'; }
         });
-      });
-    }
-  };
-
-  Drupal.behaviors.csDarkMode = {
-    attach: function (context) {
-      once('cs-dark', 'body', context).forEach(function (body) {
-        // restore last choice so it survives navigation
-        try {
-          var saved = localStorage.getItem('cs-theme');
-          if (saved === 'dark' || saved === 'light') { applyTheme(saved); }
-        } catch (e) {}
-
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cs-theme-toggle';
-        function refresh() {
-          var dark = document.documentElement.getAttribute('data-cs-theme') === 'dark';
-          btn.textContent = dark ? '☀' : '☾';
-          btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-          btn.title = btn.getAttribute('aria-label');
-        }
-        btn.addEventListener('click', function () {
-          var next = document.documentElement.getAttribute('data-cs-theme') === 'dark' ? 'light' : 'dark';
-          applyTheme(next);
-          try { localStorage.setItem('cs-theme', next); } catch (e) {}
-          refresh();
-        });
-        refresh();
-        body.appendChild(btn);
       });
     }
   };
