@@ -207,3 +207,96 @@ function carshowroom_ui_update_10002() {
   }
   return $msg;
 }
+
+/**
+ * Correct update_10002: restore the real-photo car grid, remove the fake one.
+ *
+ * Update #10002 deleted the wrong side of the duplicate. The Views blocks
+ * (cars_by_category-block_1/2/3) render the actual "car" nodes with their
+ * real uploaded field_image photos — that is the content that should stay.
+ * The markup still sitting in each category page's body is a hand-built,
+ * text-only placeholder grid (blue gradient header, no real photo, just a
+ * "SUV"/"Sportcars"/"Sedan" label) — that is the one to remove.
+ *
+ * This re-creates the three category-page Views blocks (not the three
+ * homepage ones — the front page never had a matching placeholder grid to
+ * begin with, so those were pure leftover clutter and stay removed), then
+ * strips the placeholder grid markup out of each category page's body,
+ * leaving the intro paragraph and the "Interested in a X?" call to action.
+ */
+function carshowroom_ui_update_10003() {
+  $block_defs = [
+    'olivero_views_block__cars_by_category_block_1' => [
+      'uuid' => '1c07af09-620e-4121-9cc3-b0b9d06487ea',
+      'plugin' => 'views_block:cars_by_category-block_1',
+      'path' => '/vehicles/suv',
+    ],
+    'olivero_views_block__cars_by_category_block_2' => [
+      'uuid' => 'befa21ea-7a71-49ae-9696-611d51ed0bd1',
+      'plugin' => 'views_block:cars_by_category-block_2',
+      'path' => '/vehicles/sportcars',
+    ],
+    'olivero_views_block__cars_by_category_block_3' => [
+      'uuid' => '67520241-5d90-4704-bbcd-96203f7fbd7b',
+      'plugin' => 'views_block:cars_by_category-block_3',
+      'path' => '/vehicles/sedan',
+    ],
+  ];
+
+  $restored = [];
+  foreach ($block_defs as $id => $def) {
+    if (Block::load($id)) {
+      continue;
+    }
+    Block::create([
+      'id' => $id,
+      'theme' => 'olivero',
+      'region' => 'content_below',
+      'weight' => 0,
+      'plugin' => $def['plugin'],
+      'settings' => [
+        'id' => $def['plugin'],
+        'label' => '',
+        'label_display' => 'visible',
+        'provider' => 'views',
+        'views_label' => '',
+        'items_per_page' => NULL,
+      ],
+      'visibility' => [
+        'request_path' => [
+          'id' => 'request_path',
+          'negate' => FALSE,
+          'pages' => $def['path'],
+        ],
+      ],
+    ])->save();
+    $restored[] = $id;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $labels = ['suv' => 'SUV', 'sportcars' => 'Sportcars', 'sedan' => 'Sedan'];
+  $stripped = [];
+
+  foreach ($labels as $key => $label) {
+    $path = \Drupal::service('path_alias.manager')->getPathByAlias('/vehicles/' . $key);
+    if (!preg_match('#/node/(\d+)#', $path, $m)) {
+      continue;
+    }
+    $node = $storage->load($m[1]);
+    if (empty($node)) {
+      continue;
+    }
+    $body = $node->get('body')->value;
+    $heading = '<h2>Available ' . $label . ' models</h2>';
+    $pattern = '#' . preg_quote($heading, '#') . '.*?(?=<h2>Interested in)#s';
+    $updated = preg_replace($pattern, '', $body, 1, $count);
+    if ($count) {
+      $node->set('body', ['value' => $updated, 'format' => 'full_html']);
+      $node->save();
+      $stripped[] = $label;
+    }
+  }
+
+  return count($restored) . ' block(s) restored (' . implode(', ', $restored) . '); '
+    . count($stripped) . ' page body/bodies cleaned of the placeholder grid (' . implode(', ', $stripped) . ').';
+}
