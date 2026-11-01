@@ -64,17 +64,17 @@ body,.page-wrapper,main,.main-content,.region--content-below{background:var(--cs
 .cs-footer-nav a:hover{color:#fff;text-decoration:underline;}
 .cs-footer-bottom{background:#000;color:#fff;text-align:center;padding:18px 12px;font-size:.95rem;}
 
-html[data-cs-theme="dark"] body,html[data-cs-theme="dark"] .layout-container,html[data-cs-theme="dark"] main,html[data-cs-theme="dark"] .main-content{color:#e4ebf2 !important;}
-html[data-cs-theme="dark"] h1,html[data-cs-theme="dark"] h2,html[data-cs-theme="dark"] h3,html[data-cs-theme="dark"] h4,html[data-cs-theme="dark"] .page-title{color:#fff !important;}
-html[data-cs-theme="dark"] p,html[data-cs-theme="dark"] li,html[data-cs-theme="dark"] label,html[data-cs-theme="dark"] .text-content{color:#d3dce6 !important;}
-html[data-cs-theme="dark"] a{color:#8fb8ff;}
+body,.layout-container,main,.main-content{color:#e4ebf2 !important;}
+h1,h2,h3,h4,.page-title{color:#fff !important;}
+p,li,label,.text-content{color:#d3dce6 !important;}
+a{color:#8fb8ff;}
 html[data-cs-theme="dark"] .site-header{background:#131b25 !important;box-shadow:0 2px 14px rgba(0,0,0,.5);}
 html[data-cs-theme="dark"] .primary-nav__menu-link,html[data-cs-theme="dark"] .site-branding__text,html[data-cs-theme="dark"] .site-branding a{color:#e4ebf2 !important;}
 html[data-cs-theme="dark"] .primary-nav__menu--level-2{background:#182230 !important;}
 html[data-cs-theme="dark"] .primary-nav__menu-link.is-active{color:#ff6b73 !important;}
-html[data-cs-theme="dark"] .cs-card{background:#182230 !important;border-color:#2a3646 !important;box-shadow:none !important;}
-html[data-cs-theme="dark"] .cs-card h3,html[data-cs-theme="dark"] .cs-price{color:#fff !important;}
-html[data-cs-theme="dark"] .cs-card li{color:#c3cfdb !important;}
+.cs-card{background:#182230 !important;border-color:#2a3646 !important;box-shadow:none !important;}
+.cs-card h3,.cs-price{color:#fff !important;}
+.cs-card li{color:#c3cfdb !important;}
 
 html[data-cs-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),html[data-cs-theme="dark"] select,html[data-cs-theme="dark"] textarea{background:#182230 !important;color:#e4ebf2 !important;border-color:#33445a !important;}
 html[data-cs-theme="dark"] .breadcrumb a{color:#ff8b92 !important;}
@@ -84,9 +84,9 @@ html[data-cs-theme="dark"] .cs-auth-title,html[data-cs-theme="dark"] .cs-auth-ma
 .cs-auth .block-page-title-block,.cs-auth .tabs,.cs-auth .block-local-tasks-block,.cs-auth .breadcrumb{display:none !important;}
 .cs-auth .cs-auth-card{max-width:980px;margin:32px auto;border-radius:22px;overflow:hidden;box-shadow:0 20px 50px rgba(20,30,80,.22);}
 .cs-auth-main{padding:44px 48px;background:#faeedd;}
-.cs-auth-title{margin:0 0 26px;text-align:center;font-size:2rem;font-weight:700;color:#7d8bf2;}
+.cs-auth-title{margin:0 0 26px;text-align:center;font-size:2rem;font-weight:700;color:#7d8bf2 !important;}
 .cs-auth-main .form-item{margin:0 0 16px;}
-.cs-auth-main label{font-weight:600;color:#6c78d8;}
+.cs-auth-main label{font-weight:600;color:#6c78d8 !important;}
 .cs-auth-main input[type=text],.cs-auth-main input[type=email],.cs-auth-main input[type=password]{width:100%;padding:15px 18px;border:2px solid #e3ddd6;border-radius:10px;background:#faeedd;font-size:1.05rem;}
 .cs-auth-main input:focus{border-color:#7d8bf2;outline:0;}
 .cs-auth-main input[type=submit],.cs-auth-main .form-submit{width:100%;padding:15px;border:0;border-radius:8px;background:#7f8cf8;color:#fff;font-size:1.3rem;font-weight:700;cursor:pointer;}
@@ -105,10 +105,10 @@ html[data-cs-theme="dark"] .cs-auth-title,html[data-cs-theme="dark"] .cs-auth-ma
 .cs-auth--login main,.cs-auth--login .main-content,.cs-auth--login .layout-container{background:transparent !important;}
 .cs-auth-card--login{max-width:440px !important;background:transparent;box-shadow:0 24px 60px rgba(10,50,120,.35) !important;}
 .cs-auth-card--login .cs-auth-main{background:#fff;}
-.cs-auth-card--login .cs-auth-title{color:#3b4ad9;}
+.cs-auth-card--login .cs-auth-title{color:#3b4ad9 !important;}
 .cs-auth-card--login input[type=text],.cs-auth-card--login input[type=password],.cs-auth-card--login input[type=email]{background:#f6f8ff;border-color:#c9d3ff;}
 .cs-auth-card--login input[type=submit]{background:#3e5bdc;box-shadow:0 8px 18px rgba(62,91,220,.4);}
-.cs-auth-foot{margin:18px 0 0;text-align:center;font-size:.9rem;color:#444;line-height:1.8;}
+.cs-auth-foot{margin:18px 0 0;text-align:center;font-size:.9rem;color:#444 !important;line-height:1.8;}
 .cs-auth-foot a{color:#3e5bdc;}
 @media (max-width:760px){.cs-auth-card--register{grid-template-columns:1fr;}.cs-auth-main{padding:30px 22px;}.sh-content{padding:0 48px;}}
 
