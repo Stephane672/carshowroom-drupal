@@ -164,3 +164,46 @@ function carshowroom_ui_update_10001() {
   }
   return $msg;
 }
+
+/**
+ * Remove the leftover "cars by category" Views block instances.
+ *
+ * Each category page (and the front page) already shows its car grid via
+ * hardcoded, styled markup in the page body. An extra, unstyled copy of the
+ * same cars was also being rendered by Views block instances placed in the
+ * content_below region (olivero_views_block__cars_by_category_block_1..6),
+ * producing a duplicate "Available X Models" section with plain, unstyled
+ * thumbnails underneath the real grid. Deleting these block instances
+ * removes the duplicate without touching the real content.
+ */
+function carshowroom_ui_update_10002() {
+  $ids = [
+    'olivero_views_block__cars_by_category_block_1',
+    'olivero_views_block__cars_by_category_block_2',
+    'olivero_views_block__cars_by_category_block_3',
+    'olivero_views_block__cars_by_category_block_4',
+    'olivero_views_block__cars_by_category_block_5',
+    'olivero_views_block__cars_by_category_block_6',
+  ];
+
+  $storage = \Drupal::entityTypeManager()->getStorage('block');
+  $deleted = [];
+  $missing = [];
+
+  foreach ($ids as $id) {
+    $block = $storage->load($id);
+    if ($block) {
+      $block->delete();
+      $deleted[] = $id;
+    }
+    else {
+      $missing[] = $id;
+    }
+  }
+
+  $msg = count($deleted) . ' duplicate "cars by category" block(s) removed.';
+  if ($missing) {
+    $msg .= ' Not found (already removed?): ' . implode(', ', $missing);
+  }
+  return $msg;
+}
